@@ -1,0 +1,116 @@
+---
+title: "Feuille \"Base Game\""
+sidebar_position: 2
+---
+
+La feuille `Base Game` est la feuille qui permet de voir vos temps sur le jeu original.
+:::note
+Cette partie de documentation s'applique aussi à la feuille `DLC`
+:::
+
+## Comment ça marche ?
+
+Cette feuille est fonctionne automatiquement : elle récupère vos meilleurs temps, calcul leur rang etc...
+En théorie, vous ne devriez pas à la modifier, si ce n'est pour trier les colonnes selon les différentes
+statistiques. <span style={{color: '#e57373'}}>Là encore, ce n'est pas ici qu'il faut 
+rentrer les temps.</span>
+
+## Structure 
+
+### 1. IDs, Icônes & Courses
+
+Les 3 premières colonnes sont plutôt simple de compréhension. Elles permettent la bonne lecture de la 
+feuille, sans ambiguïté. Les IDs en première colonne vous permettent de revenir à l'ordre initial des courses
+après un tri par une autre colonne. Il vous suffit de trier la colonne de A-Z.
+
+### 2. Best Time
+
+C'est la colonne qui indique votre actuel meilleur temps.
+
+### 3. Date & Days
+
+Ces 2 colonnes vous donnent une information quand à la longévité de votre temps. Plus il tient longtemps, 
+plus c'est un bon temps !
+
+### 4. Rank
+
+Le rang de votre temps désigne le rapport de celui-ci sur le WR. C'est un indicateur de la distance relative
+entre votre temps et le WR. C'est l'un des deux indicateurs principaux sur si votre temps est bon. 
+Les rangs se découpent comme suit, du meilleur au moyen bon : 
+
+
+<div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem'}}>
+  <div>
+
+  - WR
+  - Legend	
+  - Master	
+  - Diamond	
+  - Ruby	
+  - Sapphire	
+
+  </div>
+  <div>
+  - Emerald	
+  - Platinum	
+  - Gold 1 & 2
+  - Silver 1 & 2
+  - Bronze 1 & 2
+  - Iron 1 & 2
+
+  </div>
+</div>
+
+Une nuance est à apporter : un rang peut être trompeur. Si le WR fait des strats très compliqué qui font
+gagner beaucoup de temps, alors avoir un rang bas ne signifie pas pour autant que le temps est mauvais.
+Voici les maps généralement impactées par ce biais : 
+```text
+  WS | Mont Tchou Tchou
+  SP | Pic de l'Observatoire
+rKTB | Plage Koopa
+ SSS | Cité Fleur-de-Sel
+ CCF | Chutes Cheep Cheep
+ rCM | Montagne Choco
+  BC | Château de Boswer
+```
+
+### 5. WR diff
+
+C'est la distance réelle qui vous sépare du WR. Elle est purement indicative, et est grandement impactée 
+par le biais énoncé plus au dessus. C'est sûrement l'indicateur le moins utile.
+
+### 6. BTT Diff
+
+Le BTT, c'est la somme de vos meilleurs splits (si ce vocabulaire vous est inconnu, je vous invite à 
+vous rendre [ici](./vocabulaire.mdx#un-peu-de-vocabulaire)).
+Il permet de vous rendre compte de quel est votre meilleur temps possible. Un temps loin de son BTT démontre
+une marge de progression certaine, ce qui le classera un peu moins haut qu'un temps proche de votre BTT. 
+
+### 7. PP Rank
+
+"PP" est l'acronyme de "Players' Page" et désigne le site [Mario Kart World Players' Page.](https://www.mariokart64.com/mkworld/)
+C'est un site web communautaire où les joueurs renseignent eux-même leurs temps. C'est, avec les rangs, le meilleur
+indicateur de positionnement de vos temps. Ainsi, plus il y a de joueurs sur ce site, plus son classement est 
+pertinent. Si vous avez le temps d'y jeter un coup d'œuil, je vous invite grandement à y faire un tour.
+La feuille de calcul récupère automatiquement les temps du site et s'en sert pour calculer votre rang théorique.
+L'actualisation se fait chaque jour à 3h du matin, heure Française.
+
+Pour un peu de positonnement, un top 300 est solide, un top 200 est très solide, et un top 100 signifie que vous
+faites parti des meilleurs. 
+
+### 8. True Rank
+
+C'est le meilleur indicateur de classement de vos temps, puisqu'il se base sur les 3 types de données montrées 
+plus haut. Il normalise les 3 autres stats, et en calcul la moyenne pondérée.
+
+:::note
+Il se peut que la feuille vous retourne une erreur si vous n'avez enregistré qu'un seul temps. 
+Cette erreur se corrigera dès le 2e temps renseigné.
+:::
+
+### 9. Stats récapitulatives
+
+C'est la colonne de droite de la feuille. Votre temps total sur les 30 maps est calculé, une fois les 30 temps
+rentrés. La feuille calcule aussi la somme de vos 30 temps théoriques, et la différence que présente celui-ci 
+avec votre temps total. Le "PP Average Finish" désigne la moyenne de vos classement selon la Players' Page.
+

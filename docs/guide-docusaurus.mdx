@@ -1,0 +1,790 @@
+---
+title: Guide Markdown et Docusaurus
+sidebar_position: 99
+---
+
+# Guide Markdown et Docusaurus
+
+Ce document regroupe la syntaxe Markdown, les fonctions propres à Docusaurus, la mise en forme (couleurs, polices, colonnes) et les réglages du site.
+
+:::info[À savoir]
+Tous les exemples de code de ce guide sont volontairement placés dans des blocs de code : en MDX, les caractères `{`, `}`, `<` et `>` dans le texte courant ont un sens spécial et peuvent faire échouer la page.
+:::
+
+## 1. Comment ça marche
+
+Docusaurus transforme des fichiers texte en site web statique (HTML, CSS, JavaScript). Le projet contient trois types de fichiers :
+
+1. **Le contenu** (`.md` / `.mdx` dans `docs/`) : la documentation. C'est là que se passe l'essentiel du travail.
+2. **La configuration** (`docusaurus.config.js`, `sidebars.js`) : des réglages, en JavaScript parce que Docusaurus l'exige. On y change des valeurs sans programmer.
+3. **Les pages sur mesure** (`src/pages/`, `src/components/`) : la page d'accueil du template, écrite en React.
+
+### Fichiers importants
+
+| Fichier ou dossier | Rôle |
+|---|---|
+| `docs/` | Pages de documentation |
+| `docusaurus.config.js` | Titre, navbar, footer, favicon, options des plugins |
+| `sidebars.js` | Menu latéral (généré automatiquement par défaut) |
+| `src/pages/index.js` | Page d'accueil du template |
+| `src/components/HomepageFeatures/` | Les trois blocs de la page d'accueil |
+| `src/css/custom.css` | Couleurs, polices, styles personnalisés |
+| `static/` | Images et fichiers statiques (`/img/...` dans les pages) |
+| `.docusaurus/` et `node_modules/` | Générés automatiquement, à ne pas toucher |
+
+### Commandes
+
+```bash
+npm run start   # serveur de développement (http://localhost:3000), rechargement automatique
+npm run build   # génère le site final dans build/
+npm run serve   # prévisualise le contenu de build/
+```
+
+Le chemin d'un fichier correspond à son adresse : `docs/intro.mdx` donne `/docs/intro`.
+
+### `.md` ou `.mdx` ?
+
+- `.md` : Markdown classique.
+- `.mdx` : Markdown, plus des composants React et du JSX (onglets, styles en ligne, etc.).
+
+Dans les versions récentes de Docusaurus, les `.md` sont eux aussi traités comme du MDX.
+
+## 2. Syntaxe de base
+
+### Titres
+
+```md
+# Titre 1 (un seul par page)
+## Titre 2
+### Titre 3
+#### Titre 4
+```
+
+Les titres 2 et 3 alimentent la table des matières à droite de la page.
+
+### Texte
+
+```md
+**gras**
+*italique*
+***gras et italique***
+~~barré~~
+`code dans une phrase`
+```
+
+### Paragraphes et sauts de ligne
+
+Une ligne vide sépare deux paragraphes. Un simple retour à la ligne ne change rien à l'affichage. Pour forcer un saut de ligne dans un paragraphe, terminer la ligne par un antislash `\` ou par deux espaces.
+
+### Listes
+
+```md
+- élément
+- autre élément
+  - sous-élément (2 espaces d'indentation)
+
+1. premier
+2. deuxième
+3. troisième
+
+- [x] tâche faite
+- [ ] tâche à faire
+```
+
+### Citations
+
+```md
+> Ceci est une citation.
+> Elle peut faire plusieurs lignes.
+>
+> > Et on peut les imbriquer.
+```
+
+### Séparateur horizontal
+
+```md
+---
+```
+
+### Tableaux
+
+```md
+| Nom      | Rôle        | Prix |
+|----------|:-----------:|-----:|
+| Alice    | Admin       | 10 € |
+| Bob      | Utilisateur | 5 €  |
+```
+
+Les `:` de la ligne de séparation règlent l'alignement : `:---` à gauche, `:---:` centré, `---:` à droite.
+
+### Notes de bas de page
+
+```md
+Une phrase avec une note.[^1]
+
+[^1]: Voici le texte de la note.
+```
+
+### Échapper un caractère
+
+Un antislash devant un caractère l'affiche tel quel : `\*pas italique\*`, `\{`, `\<`.
+
+### Commentaires (invisibles sur le site)
+
+```mdx
+{/* Ceci est un commentaire */}
+```
+
+Les commentaires HTML `<!-- -->` provoquent une erreur avec MDX 3 (versions récentes de Docusaurus).
+
+### Conserver des espaces (alignement)
+
+Markdown réduit les espaces multiples à un seul. Pour garder un alignement :
+
+**Solution 1 : bloc de code** (texte brut, police à chasse fixe)
+
+````md
+```text
+  WS | Mont Tchou Tchou
+  SP | Pic de l'Observatoire
+rKTB | Plage Koopa
+```
+````
+
+**Solution 2 : tableau** (alignement géré automatiquement)
+
+```md
+| Code | Circuit               |
+|-----:|:----------------------|
+| WS   | Mont Tchou Tchou      |
+| SP   | Pic de l'Observatoire |
+| rKTB | Plage Koopa           |
+```
+
+**Solution 3 : liste HTML en police à chasse fixe** (lourd, à éviter sauf besoin des puces)
+
+```mdx
+<ul style={{fontFamily: 'monospace', whiteSpace: 'pre'}}>
+  <li>{'  WS'} | Mont Tchou Tchou</li>
+  <li>{'rKTB'} | Plage Koopa</li>
+</ul>
+```
+
+## 3. Liens
+
+```md
+[Texte du lien](https://exemple.com)
+[Avec infobulle](https://exemple.com "Texte au survol")
+<https://exemple.com>
+```
+
+### Vers une autre page de la doc
+
+Utiliser le chemin du fichier, avec l'extension. Docusaurus le convertit en URL et signale une erreur si la cible n'existe pas.
+
+```md
+[Voir l'installation](./installation.md)
+[Page d'un autre dossier](../utilisation/options.md)
+```
+
+### Vers un titre précis
+
+Ajouter `#` suivi du titre en minuscules, sans accents, avec des tirets à la place des espaces.
+
+```md
+[Aller aux options](#mes-options)
+[Autre page, section précise](./installation.md#etape-1)
+```
+
+Pour fixer un identifiant qui ne changera pas si le titre est modifié :
+
+```md
+## Mes options {#options}
+```
+
+### Liens de type référence
+
+```md
+Lis la [documentation][doc] et le [guide][doc].
+
+[doc]: https://exemple.com
+```
+
+### Ouvrir dans un nouvel onglet
+
+Le Markdown ne le permet pas, il faut du HTML.
+
+```mdx
+<a href="https://exemple.com" target="_blank" rel="noopener noreferrer">Mon lien</a>
+```
+
+### Téléchargement
+
+Placer le fichier dans `static/files/` puis écrire `[Télécharger](/files/mon-fichier.pdf)`.
+
+## 4. Images
+
+```md
+![Texte alternatif](/img/capture.png)
+![Relative](./img/capture.png)
+```
+
+- **Chemin `/img/...`** : l'image est dans `static/img/`. Fonctionne depuis n'importe quelle page.
+- **Chemin relatif `./img/...`** : l'image est rangée à côté de la page. Docusaurus vérifie l'existence du fichier au build.
+- Éviter les espaces et accents dans les noms de fichiers (`capture-ecran.png`).
+
+Image cliquable :
+
+```md
+[![Alt](/img/capture.png)](https://exemple.com)
+```
+
+Image redimensionnée et centrée :
+
+```mdx
+<div style={{textAlign: 'center'}}>
+  <img src="/img/capture.png" alt="Description" width="400" />
+</div>
+```
+
+## 5. Blocs de code
+
+````md
+```python
+def bonjour():
+    print("Salut")
+```
+````
+
+Options ajoutées par Docusaurus :
+
+````md
+```js title="src/app.js" showLineNumbers
+const a = 1;
+```
+````
+
+- `title="..."` : nom de fichier au-dessus du bloc
+- `showLineNumbers` : numérotation des lignes
+- `{2,4-6}` après le langage : surligne les lignes 2 et 4 à 6
+
+Surlignage par commentaire :
+
+````md
+```js
+function f() {
+  // highlight-next-line
+  return 42;
+}
+```
+````
+
+Langages courants : `bash`, `json`, `yaml`, `js`, `ts`, `python`, `sql`, `html`, `css`. Certains (PHP, Java...) demandent le réglage `additionalLanguages` dans la config.
+
+## 6. Blocs spéciaux de Docusaurus
+
+### Encadrés (admonitions)
+
+```md
+:::note
+Une note neutre.
+:::
+
+:::tip[Titre personnalisé]
+Un conseil.
+:::
+
+:::info
+Une information.
+:::
+
+:::warning
+Attention à ce point.
+:::
+
+:::danger
+Action risquée.
+:::
+```
+
+Le titre se place entre crochets juste après le type, sans espace. Sans titre personnalisé, le nom du type est affiché.
+
+### Changer les couleurs des encadrés
+
+Dans `src/css/custom.css`, modifier les variables de base :
+
+```css
+:root {
+  --ifm-color-info: #2ec4b6;
+  --ifm-color-success: #4caf50;
+  --ifm-color-warning: #ff9800;
+  --ifm-color-danger: #e53935;
+}
+
+[data-theme='dark'] {
+  --ifm-color-info: #4dd0c4;
+  --ifm-color-success: #66bb6a;
+  --ifm-color-warning: #ffb74d;
+  --ifm-color-danger: #ef5350;
+}
+```
+
+| Encadré | Variable |
+|---|---|
+| `note` | `--ifm-color-secondary` |
+| `tip` | `--ifm-color-success` |
+| `info` | `--ifm-color-info` |
+| `warning` | `--ifm-color-warning` |
+| `danger` | `--ifm-color-danger` |
+
+Ces variables servent aussi ailleurs sur le site (boutons, badges). Pour ne changer que les encadrés, cibler directement leur classe :
+
+```css
+.alert--info {
+  --ifm-alert-background-color: #e0f7f5;
+  --ifm-alert-border-color: #2ec4b6;
+  --ifm-alert-foreground-color: #0b4f49;
+}
+
+[data-theme='dark'] .alert--info {
+  --ifm-alert-background-color: #12332f;
+  --ifm-alert-foreground-color: #b8f0ea;
+}
+```
+
+Classes disponibles : `alert--info`, `alert--success` (tip), `alert--warning`, `alert--danger`, `alert--secondary` (note).
+
+Il est aussi possible de créer ses propres types d'encadrés (option `admonitions: { keywords: [...] }` dans le preset, plus une classe CSS associée).
+
+### Blocs repliables
+
+```mdx
+<details>
+  <summary>Cliquer pour dérouler</summary>
+
+  Contenu caché, avec du **Markdown** possible (garder la ligne vide au-dessus).
+
+</details>
+```
+
+### Onglets
+
+```mdx
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+  <TabItem value="win" label="Windows" default>
+    Instructions Windows.
+  </TabItem>
+  <TabItem value="mac" label="macOS">
+    Instructions macOS.
+  </TabItem>
+</Tabs>
+```
+
+Les `import` se placent après le front matter, avant le contenu.
+
+### Diagrammes Mermaid
+
+Nécessitent d'installer `@docusaurus/theme-mermaid`, puis d'activer `markdown: { mermaid: true }` et `themes: ['@docusaurus/theme-mermaid']` dans la config.
+
+## 7. Couleurs
+
+Le Markdown n'a pas de couleur native. En MDX, on utilise `style` avec un **objet JavaScript** (doubles accolades, propriétés en camelCase, valeurs entre guillemets) :
+
+```mdx
+<span style={{color: 'red'}}>Texte rouge</span>
+<span style={{color: '#2ec4b6'}}>Texte turquoise</span>
+<span style={{backgroundColor: '#ffeb3b', color: 'black'}}>Surligné</span>
+<mark>Surligné sans configuration</mark>
+```
+
+:::warning
+Ne pas écrire `style="color: red"` : la syntaxe HTML classique fait échouer le build en MDX.
+:::
+
+### Suivre le thème du site
+
+```mdx
+<span style={{color: 'var(--ifm-color-primary)'}}>Couleur principale du site</span>
+<span style={{color: 'var(--ifm-color-danger)'}}>Danger</span>
+```
+
+### Un rouge plus doux
+
+| Code | Usage |
+|---|---|
+| `#e57373` | Le plus doux, lisible sur fond sombre |
+| `#d9534f` | Bon compromis clair et sombre |
+| `#c0504d` | Plus terne, plutôt mode clair |
+| `#e2726e` | Légèrement rosé |
+
+### Variables et classes réutilisables
+
+Dans `src/css/custom.css` :
+
+```css
+:root {
+  --mon-rouge: #c0504d;
+}
+
+[data-theme='dark'] {
+  --mon-rouge: #e57373;
+}
+
+.rouge-doux { color: var(--mon-rouge); }
+.discret { color: gray; font-size: 0.85em; }
+```
+
+Dans une page (attention : `className`, pas `class`) :
+
+```mdx
+<span className="rouge-doux">Texte en rouge doux</span>
+```
+
+### Couleur principale du site
+
+Dans `custom.css`, modifier `--ifm-color-primary` et ses variantes (`-dark`, `-darker`, `-light`, etc.). Le site de Docusaurus propose un générateur de palette dans sa page « Styling and Layout ».
+
+## 8. Polices et mise en forme
+
+### Effets de texte
+
+```mdx
+<u>souligné</u>
+<sup>exposant</sup> et <sub>indice</sub>
+<kbd>Ctrl</kbd> + <kbd>C</kbd>
+<small>petit texte</small>
+```
+
+### Taille, famille, alignement
+
+```mdx
+<span style={{fontSize: '1.5rem'}}>Grand texte</span>
+<span style={{fontFamily: 'Courier New, monospace'}}>Police à chasse fixe</span>
+<span style={{fontWeight: 'bold', fontStyle: 'italic'}}>Gras italique</span>
+
+<div style={{textAlign: 'center'}}>Texte centré</div>
+<div style={{textAlign: 'right'}}>Texte à droite</div>
+```
+
+### Encadré personnalisé
+
+```mdx
+<div style={{border: '2px solid #ff7f50', borderRadius: '8px', padding: '1rem'}}>
+  Mon bloc encadré.
+</div>
+```
+
+### Police de tout le site
+
+Dans `src/css/custom.css` :
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+:root {
+  --ifm-font-family-base: 'Inter', system-ui, sans-serif;
+  --ifm-font-size-base: 100%;
+}
+```
+
+## 9. Colonnes
+
+Markdown n'a pas de colonnes natives. Trois méthodes.
+
+### Méthode 1 : grille CSS en ligne
+
+```mdx
+<div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem'}}>
+  <div>
+
+  ### Colonne de gauche
+
+  Du texte avec du **Markdown**.
+
+  </div>
+  <div>
+
+  ### Colonne de droite
+
+  Un autre texte.
+
+  </div>
+</div>
+```
+
+Les **lignes vides** après chaque `<div>` ouvrante et avant chaque `</div>` fermante sont indispensables pour que le Markdown soit interprété. Pour trois colonnes : `'1fr 1fr 1fr'`. Pour une colonne deux fois plus large : `'2fr 1fr'`.
+
+### Méthode 2 : classe réutilisable (adaptée au mobile)
+
+Dans `custom.css` :
+
+```css
+.deux-colonnes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .deux-colonnes {
+    grid-template-columns: 1fr;
+  }
+}
+```
+
+Dans une page :
+
+```mdx
+<div className="deux-colonnes">
+  <div>
+
+  Contenu de gauche.
+
+  </div>
+  <div>
+
+  Contenu de droite.
+
+  </div>
+</div>
+```
+
+### Méthode 3 : grille Infima (sans CSS à écrire)
+
+```mdx
+<div className="row">
+  <div className="col col--6">
+
+  Contenu de gauche.
+
+  </div>
+  <div className="col col--6">
+
+  Contenu de droite.
+
+  </div>
+</div>
+```
+
+La grille compte 12 colonnes : `col--6` + `col--6` fait deux moitiés, `col--4` + `col--8` un tiers et deux tiers. Elle passe en une colonne sur mobile.
+
+### Colonnes de journal
+
+Pour faire s'écouler un long texte ou une longue liste sur deux colonnes :
+
+```mdx
+<div style={{columnCount: 2, columnGap: '2rem'}}>
+
+Un long texte qui se répartit automatiquement...
+
+</div>
+```
+
+## 10. Front matter et menu latéral
+
+Chaque page peut commencer par un en-tête entouré de `---`, sans rien avant (pas même une ligne vide) :
+
+```md
+---
+title: Titre dans le menu et l'onglet
+sidebar_label: Libellé court dans le menu
+sidebar_position: 2
+description: Résumé pour les moteurs de recherche
+slug: /mon-adresse
+hide_table_of_contents: true
+custom_edit_url: null
+draft: true
+unlisted: true
+---
+```
+
+### `sidebar_position`
+
+Définit l'ordre dans le menu : plus le nombre est petit, plus la page est haute. Points à connaître :
+
+- L'ordre se calcule entre **éléments frères** (même dossier). Pages et dossiers sont triés ensemble : pour un dossier, c'est la valeur `position` de son `_category_.json` qui compte.
+- La clé doit s'écrire exactement `sidebar_position`. Une clé mal orthographiée est ignorée sans erreur.
+- Écrire le nombre **sans guillemets** (`"10"` serait trié comme du texte, donc avant `"4"`).
+- Un préfixe numérique dans le nom de fichier (`04-installation.md`) peut entrer en conflit.
+- Les pages sans position passent après celles qui en ont, par ordre alphabétique.
+- Astuce : numéroter de 10 en 10 pour pouvoir insérer des pages plus tard.
+
+### Organiser en sections
+
+```
+docs/
+├── intro.mdx
+├── installation.md
+└── utilisation/
+    ├── _category_.json
+    ├── premiers-pas.md
+    └── options.md
+```
+
+```json
+{
+  "label": "Utilisation",
+  "position": 3
+}
+```
+
+### Valeurs utiles du front matter
+
+| Clé | Effet |
+|---|---|
+| `draft: true` | Page visible en local, absente du build final |
+| `unlisted: true` | Page non listée et non indexée, mais accessible par son adresse |
+| `custom_edit_url: null` | Retire le lien « Edit this page » de cette page |
+| `slug: /` | Fait de la page la racine de la doc |
+
+## 11. Réglages du site
+
+Ces réglages se trouvent dans `docusaurus.config.js`.
+
+### Titre du site, slogan, favicon
+
+```js
+const config = {
+  title: 'World Timesheet',
+  tagline: 'Documentation de World Timesheet',
+  favicon: 'img/favicon.ico',
+  // ...
+```
+
+- `title` : nom du site (onglet, navbar)
+- `tagline` : slogan sous le titre de la page d'accueil
+- `favicon` : icône de l'onglet (remplacer `static/img/favicon.ico`)
+
+Le titre d'une page précise est le `title:` de son front matter.
+
+### Logo et navbar
+
+Dans `themeConfig` :
+
+```js
+navbar: {
+  title: 'World Timesheet',
+  logo: {
+    alt: 'Logo World Timesheet',
+    src: 'img/logo.svg',
+    // srcDark: 'img/logo-sombre.svg',
+  },
+  items: [ /* ... */ ],
+},
+```
+
+Le chemin `src` est relatif à `static/`. Remplacer `static/img/logo.svg` ou changer le chemin. Un titre vide (`''`) ne garde que le logo.
+
+### Retirer « Edit this page »
+
+Supprimer la ligne `editUrl` dans le bloc `docs` (et dans `blog` si le blog est conservé) :
+
+```js
+docs: {
+  sidebarPath: './sidebars.js',
+},
+```
+
+Ou page par page avec `custom_edit_url: null`. Si le lien est conservé, remplacer l'URL par celle de son propre dépôt.
+
+### Supprimer le blog
+
+1. Supprimer le dossier `blog/`.
+2. Dans `presets` puis `classic`, mettre `blog: false,`.
+3. Retirer le lien Blog de la navbar et du footer.
+
+### Page d'accueil
+
+**Option A : la personnaliser**
+
+- Titre et slogan : `title` et `tagline` dans la config.
+- Bouton et son lien : `src/pages/index.js` (chercher `Docusaurus Tutorial - 5min` et `to="/docs/intro"`).
+- Titre de l'onglet : dans `src/pages/index.js`, remplacer la ligne `title` du composant `Layout` (voir ci-dessous).
+- Trois blocs : `FeatureList` dans `src/components/HomepageFeatures/index.js`.
+
+Exemple pour le titre de l'onglet, dans `src/pages/index.js` :
+
+````js
+// Avant
+<Layout title={`Hello from ${siteConfig.title}`} description="...">
+
+// Après
+<Layout title={siteConfig.title} description="...">
+````
+
+**Option B : la doc comme page d'accueil**
+
+1. Supprimer `src/pages/index.js` et `src/pages/index.module.css`.
+2. Ajouter `routeBasePath: '/'` dans le bloc `docs` :
+
+```js
+docs: {
+  sidebarPath: './sidebars.js',
+  routeBasePath: '/',
+},
+```
+
+3. Ajouter `slug: /` dans le front matter de la page d'accueil de la doc.
+4. Retirer le préfixe `/docs/` des liens existants.
+
+### Image de partage
+
+`image: 'img/docusaurus-social-card.jpg'` dans `themeConfig` définit l'aperçu lors d'un partage de lien. La remplacer ou supprimer la ligne.
+
+## 12. Publication et visibilité
+
+Le site est un **site statique** : `npm run build` produit le dossier `build/`, que n'importe quel hébergeur peut servir (GitHub Pages, Netlify, Vercel, Cloudflare Pages, serveur perso). Vérifier `url` et `baseUrl` dans la config avant de déployer.
+
+### Séparer le public du personnel
+
+Docusaurus n'a pas de système de connexion : tout ce qui est dans `build/` est lisible par qui connaît l'adresse.
+
+| Méthode | Protège ? |
+|---|---|
+| Chemin `/perso` seul | Non, simple discrétion |
+| `unlisted: true` | Non, mais exclue du sitemap et non indexée |
+| `draft: true` | Oui, absente du build |
+| Plugin de docs privé exclu du build public | Oui |
+| Deux sites séparés | Oui |
+| Chemin protégé côté hébergeur (Cloudflare Access, etc.) | Oui |
+
+### Page discrète de liens personnels
+
+Pour une simple page de liens sans besoin de protection, créer `src/pages/perso.mdx` : elle sera accessible à `/perso`, hors du menu de la doc. Ne lier cette page ni depuis la navbar ni depuis le footer, et ajouter `unlisted: true` dans son front matter. Vérifier le rendu réel avec `npm run build` puis `npm run serve`.
+
+## 13. Pièges courants
+
+- **Lignes vides** : indispensables autour des blocs HTML/JSX pour que le Markdown à l'intérieur soit interprété.
+- **Accolades et chevrons** : `{`, `}`, `<`, `>` dans le texte courant peuvent casser la page. Les échapper avec `\` ou les mettre dans un bloc de code.
+- **Balises non fermées** : en JSX, écrire `<br />` et `<img ... />`.
+- **`class` et `style`** : utiliser `className` et un objet pour `style`.
+- **Noms de fichiers** : en minuscules, avec des tirets, sans espaces ni accents.
+- **Erreur au build** : lire le terminal où tourne `npm run start`, il indique le fichier et la ligne.
+- **Rien ne change** : vider le cache du navigateur (`Ctrl+F5`) et, pour les modifications de config, relancer `npm run start`.
+
+## 14. Confort d'écriture dans VS Code
+
+- Thème de couleurs : `Ctrl+K` puis `Ctrl+T`.
+- Extension **MDX** (unifiedjs) pour la coloration des `.mdx`.
+- Extension **Markdown All in One** : raccourcis, table des matières, mise en forme des tableaux.
+- Recherche dans tout le projet : `Ctrl+Maj+F`, pratique pour retrouver un texte du template.
+
+## 15. Aide-mémoire
+
+| Je veux... | J'écris... |
+|---|---|
+| Un titre | `## Titre` |
+| Du gras | `**texte**` |
+| Un lien | `[texte](url)` |
+| Une image | `![alt](/img/x.png)` |
+| Du code | trois accents graves, puis le langage |
+| Un encadré | `:::tip` puis `:::` |
+| Un encadré titré | `:::tip[Mon titre]` |
+| Du texte coloré | `<span style={{color: 'red'}}>...</span>` |
+| Deux colonnes | `<div className="row">` avec des `col col--6` |
+| Un bloc repliable | `<details><summary>...</summary>...</details>` |
+| Un commentaire | `{/* ... */}` |
+| Un ordre dans le menu | `sidebar_position: 10` dans le front matter |

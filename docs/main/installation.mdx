@@ -1,0 +1,34 @@
+---
+title: "Installation & Structure"
+sidebar_position: 2
+---
+
+## Autorisation des modules
+Le document récupère des données dans à partir d'une autre feuille, pour pouvoir ensuite les traiter les données
+qui s'y trouvent.
+A la création de votre copie, il vous faut autoriser ces échanges de données. Pour cela, regardez en bas de votre
+page, et cliquez sur la feuille `.wrs`. 
+
+![Installation des modules](/img/installation-modules.png)
+
+Vous devriez alors voir des messages `#REF!` en haut de la page. Il vous faut cliquer dessus, et **autoriser
+l'accès**. Vous pouvez ensuite masquer cette feuille avec (sur la feuille) : `Clique droit → Masquer la feuille`
+
+:::warning
+Les feuilles dont le nom est précédé d'un point `.` sont les feuilles qui assurent le bon fonctionnement du document. 
+Sans eux, plus rien ne marche. Il est donc nécessaire de ne pas y toucher, sauf si vous savez ce que vous faites.
+:::
+
+C'est tout pour l'installation ! Voyons maintenant comment se strcuture le document.
+
+## Structure
+Le document **World Timesheet** se compose de 4 feuilles principales : 
+- [ ] Base Game
+- [ ] DLC
+- [ ] Times
+- [ ] Splits
+
+Les 2 premières vous permettent de voir vos meilleurs temps, leur rang, et plein d'autres stats dessus. 
+La feuille `Times` sert uniquement à enregistrer votre temps dans le doc, et la feuille `Splits` sert
+à renseigner les temps de vos tours, pour calculer votre meilleur temps théorique (BTT) par course.
+Nous verrons en détail comment se servir de chacune d'entre elles.

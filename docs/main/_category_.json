@@ -1,0 +1,9 @@
+{
+  "label": "Bienvenue !",
+  "position": 1,
+  "collapsible": false,
+  "link": {
+    "type": "doc",
+    "id": "main/bienvenue"
+  }
+}

@@ -1,0 +1,65 @@
+---
+title: "Feuille \"Splits\""
+sidebar_position: 3
+---
+
+La feuille `Splits` est l'endroit où vous rensiegnez vos splits, et là où vos BTT sont calculés.
+
+## Comment ça marche ?
+
+La feuille est constituée de blocs, un pour chaque map du jeu. La partie réservée au DLC se trouve plus
+à droite que celle à propos du jeu de base. 
+Voici donc à quoi ressemble un bloc typique : 
+
+![Exemple Bloc Splits](/img/exemple-splits.png)
+
+Il est constitué de l'abréviation de la map, son icône et deux rangées où mettre ses temps :
+- La ligne du haut pour les splits de votre temps actuel (indiqué par le `PB`)
+- La ligne du bas pour vos meilleurs splits (indiqué par le `Best`)
+
+Il est important que le split soit rentré dans le même format que dans l'exemple.
+Les `L1, L2, L3` ou `S1, S2, S3` indique le numéro du tour 
+(*Lap 1, Lap 2, Lap 3* ou *Section 1, Section 2, Section3*), et les deux cellules en dessous de `Total`
+vous indique votre temps actuel et votre BTT. La différence des 2 se situe à droite de la cellule du BTT.
+
+## Erreurs Typiques 
+
+Lors de la rentrée de vos splits, certaines erreurs peuvent apparaître. Elle sont listées ci_dessous : 
+
+### 1. Erreur de la cellule `Total` de votre PB
+
+Voici à quoi ressemble l'erreur : 
+
+![Erreur Total PB](/img/splits-error-total-pb.png)
+
+La feuille vérifie si la somme des splits entrés est bien égal au temps rentré dans la feuille `Times`. 
+Si un message apparait, cela signifie que soit les splits sont incorrects, soit le temps total est faux.
+Il vous faudra donc vérifier l'un ou l'autre. 
+
+### 2. Erreur de la cellule de différence
+
+Voici à quoi ressemble l'erreur : 
+
+![Erreur Total Best](/img/splits-error-total-best.png)
+
+La feuille vérifie si votre BTT est bien inférieur à votre PB. Si ce n'est pas le cas,
+il vous faudra là encore vérifier vos splits. Dans l'exemple, on voit bien que ce n'est 
+pas le cas.
+
+:::note
+Si vous ne connaissez pas précisément vos BS, alors vous pouvez entrer une approximation de
+ceux-ci. Cela n'aura que peut d'impact sur le reste.
+:::
+
+## Une dernière précision
+
+Le bloc pour la Route Arc-en-Ciel est un peu spécial. En effet, la section 4 de la map
+est longue, bien souvent de plus d'une minute. Il faudra alors le rentrer avec le nombre total 
+de secondes. Si le temps de votre section 4 est de **1:20.000**, alors elle devra être rentrée sous la forme 
+**80:000**.
+
+<div style={{border: '2px solid #137F8B', borderRadius: '8px', padding: '1rem'}}>
+  Et voilà ! On arrive à la fin de ce petit guide. J'espère qu'il vous aura été utile. 
+  Ce document est une première expérimentation, alors tout retour sera le bienvenu !
+  Vous pouvez me contacter sur Discod : `zzephyr.png`. 
+</div>
