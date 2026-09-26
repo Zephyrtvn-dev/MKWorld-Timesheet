@@ -11,7 +11,7 @@ const config = {
     v4: true,
   },
 
-  url: 'https://zephyrtvn-dev.github.io',
+  url: 'mkworld-timesheet.vercel.app',
   baseUrl: '/',
 
   organizationName: 'Zephyrtvn-dev',
